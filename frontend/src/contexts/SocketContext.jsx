@@ -16,7 +16,7 @@ export const SocketProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3001');
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL);
     
     newSocket.on('connect', () => {
       console.log('Connected to Socket.io server');
