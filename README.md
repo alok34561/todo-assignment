@@ -13,7 +13,7 @@ A full-stack task management application with real-time updates built using Lara
 
 ## Tech Stack
 
-- **Backend:** Laravel 10+ with SQLite
+- **Backend:** Laravel 12 with Mysqli
 - **Frontend:** React 18 with Vite
 - **Real-time:** Node.js + Socket.io Server
 
