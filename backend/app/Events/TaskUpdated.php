@@ -22,7 +22,7 @@ class TaskUpdated implements ShouldBroadcastNow
     private function broadcastToSocket()
     {
         try {
-            Http::post('http://localhost:3001/webhook/task-event', [
+            Http::post(config('constants.SOCKET_URL'), [
                 'event' => 'task.updated',
                 'data' => [
                     'task' => $this->task->load('user:id,name,email'),

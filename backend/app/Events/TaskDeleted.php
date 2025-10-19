@@ -23,7 +23,7 @@ class TaskDeleted implements ShouldBroadcastNow
     {
         try {
             \Log::info('Broadcasting task.deleted event for task ID: ' . $this->task->id);
-            $response = Http::post('http://localhost:3001/webhook/task-event', [
+            $response = Http::post(config('constants.SOCKET_URL'), [
                 'event' => 'task.deleted',
                 'data' => [
                     'task' => $this->task,
