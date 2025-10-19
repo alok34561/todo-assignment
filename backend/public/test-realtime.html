@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time Task Updates Test</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .task { padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px; }
+        .status { font-weight: bold; }
+        .pending { background-color: #fff3cd; }
+        .in-progress { background-color: #d1ecf1; }
+        .done { background-color: #d4edda; }
+        #connection-status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background-color: #d4edda; color: #155724; }
+        .disconnected { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Real-time Task Updates Test</h1>
+    <div id="connection-status" class="disconnected">Disconnected</div>
+    
+    <h2>Tasks</h2>
+    <div id="tasks"></div>
+    
+    <h2>Real-time Events</h2>
+    <div id="events"></div>
+
+    <script>
+        // Initialize Pusher
+        const pusher = new Pusher('abcdefghijklmnop', {
+            cluster: 'ap2',
+            forceTLS: true
+        });
+
+        const connectionStatus = document.getElementById('connection-status');
+        const tasksContainer = document.getElementById('tasks');
+        const eventsContainer = document.getElementById('events');
+
+        // Connection status
+        pusher.connection.bind('connected', function() {
+            connectionStatus.textContent = 'Connected to Pusher';
+            connectionStatus.className = 'connected';
+            addEvent('Connected to Pusher WebSocket');
+        });
+
+        pusher.connection.bind('disconnected', function() {
+            connectionStatus.textContent = 'Disconnected from Pusher';
+            connectionStatus.className = 'disconnected';
+            addEvent('Disconnected from Pusher WebSocket');
+        });
+
+        // Subscribe to tasks channel
+        const channel = pusher.subscribe('tasks');
+
+        // Listen for task events
+        channel.bind('task.created', function(data) {
+            addEvent('Task Created: ' + data.task.title);
+            addOrUpdateTask(data.task);
+        });
+
+        channel.bind('task.updated', function(data) {
+            addEvent('Task Updated: ' + data.task.title + ' - Status: ' + data.task.status);
+            addOrUpdateTask(data.task);
+        });
+
+        channel.bind('task.deleted', function(data) {
+            addEvent('Task Deleted: ' + data.task.title);
+            removeTask(data.task.id);
+        });
+
+        function addEvent(message) {
+            const eventDiv = document.createElement('div');
+            eventDiv.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            eventsContainer.insertBefore(eventDiv, eventsContainer.firstChild);
+        }
+
+        function addOrUpdateTask(task) {
+            let taskDiv = document.getElementById('task-' + task.id);
+            
+            if (!taskDiv) {
+                taskDiv = document.createElement('div');
+                taskDiv.id = 'task-' + task.id;
+                taskDiv.className = 'task';
+                tasksContainer.appendChild(taskDiv);
+            }
+            
+            taskDiv.className = 'task ' + task.status;
+            taskDiv.innerHTML = `
+                <strong>${task.title}</strong><br>
+                <span class="status">Status: ${task.status}</span><br>
+                <small>Created by: ${task.user ? task.user.name : 'Unknown'}</small>
+            `;
+        }
+
+        function removeTask(taskId) {
+            const taskDiv = document.getElementById('task-' + taskId);
+            if (taskDiv) {
+                taskDiv.remove();
+            }
+        }
+
+        // Load initial tasks
+        fetch('/api/tasks', {
+            headers: {
+                'Authorization': 'Bearer YOUR_TOKEN_HERE',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(tasks => {
+            tasks.forEach(task => addOrUpdateTask(task));
+        })
+        .catch(error => {
+            addEvent('Error loading tasks: ' + error.message);
+        });
+    </script>
+</body>
+</html>

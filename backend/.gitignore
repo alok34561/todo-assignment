@@ -1,0 +1,43 @@
+# Laravel specific
+/vendor/
+/node_modules/
+/public/hot
+/public/storage
+/storage/*.key
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+
+# Environment files
+.env
+.env.backup
+.env.production
+
+# Database
+/database/database.sqlite
+/database/*.sqlite
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Laravel Mix
+/public/mix-manifest.json
+
+# Composer
+composer.phar
+
+# PHPUnit
+.phpunit.result.cache
+/coverage/
+
+# Laravel Telescope
+/storage/telescope/
