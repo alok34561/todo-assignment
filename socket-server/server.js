@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
     for (let [userId, socketId] of userSockets.entries()) {
       if (socketId === socket.id) {
         userSockets.delete(userId);
-        console.log(`👤 User ${userId} removed from mapping`);
+        console.log(`User ${userId} removed from mapping`);
         break;
       }
     }
