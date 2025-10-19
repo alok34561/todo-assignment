@@ -121,8 +121,8 @@ No additional environment configuration needed.
    - Password: Minimum 8 characters
 
 ### Test Accounts (if seeder is run)
-- **User 1:** Email: `user1@example.com`, Password: `password`
-- **User 2:** Email: `user2@example.com`, Password: `password`
+- **User 1:** Email: `admin@gmail.com`, Password: `admin@1234`
+- **User 2:** Email: `user@gmail.com`, Password: `user@1234`
 
 ## How to Run All Servers
 
