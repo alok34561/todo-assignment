@@ -42,16 +42,16 @@ app.post('/webhook/task-event', (req, res) => {
 
 io.on('connection', (socket) => {
   connectedClients++;
-  console.log('🔗 Client connected:', socket.id, '| Total:', connectedClients);
+  console.log('Client connected:', socket.id, '| Total:', connectedClients);
   
   socket.on('join', (data) => {
     const { userId } = data;
-    console.log('📥 Join request:', data);
+    console.log(' Join request:', data);
     if (userId) {
       const userIdInt = parseInt(userId);
       userSockets.set(userIdInt, socket.id);
-      console.log(`👤 User ${userIdInt} mapped to socket ${socket.id}`);
-      console.log('👥 Current mappings:', Array.from(userSockets.entries()));
+      console.log(`User ${userIdInt} mapped to socket ${socket.id}`);
+      console.log('Current mappings:', Array.from(userSockets.entries()));
     }
   });
   
@@ -65,11 +65,11 @@ io.on('connection', (socket) => {
         break;
       }
     }
-    console.log('🔌 Client disconnected:', socket.id, '| Total:', connectedClients);
+    console.log('Client disconnected:', socket.id, '| Total:', connectedClients);
   });
 });
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-  console.log(`🚀 Socket.io server running on http://localhost:${PORT}`);
+  console.log(`Socket.io server running on http://localhost:${PORT}`);
 });
